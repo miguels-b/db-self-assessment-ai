@@ -1,10 +1,14 @@
+# DB Self-Assessment Platform with AI
+
 **Bachelor's Thesis (TFG) — Miguel Sánchez-Beato**
 
 ---
 
 ## Description
 
-A web application that helps students of *Database Systems* to self-assess using a fine-tuned large language model (Llama 3). It uses docker-compose to get 4 dockers into 1 to make it easy to execute locally. Students can practise, receive instant feedback, and track their progress in an intuitive interface. Completelly documented in Spanish in TFG.pdf with every aspect relevant to the project, execution photos, evaluation of the effect of the finetuning, interface screencaptures of every relevant detail of the frontend and every detail considered relevant to the project. All the questions and application is in Spanish as it is a Bachelor's Thesis in a Spanish University and it is thought to be used by teachers of courses of Databases.
+A web application that helps students of *Database Systems* to self-assess using a fine-tuned large language model (Llama 3). It uses Docker Compose to orchestrate 4 containers into a single command, making it easy to run locally. Students can practise, receive instant feedback, and track their progress in an intuitive interface.
+
+The project is fully documented in Spanish in `TFG.pdf`, covering every aspect of the project: execution screenshots, evaluation of the effect of the fine-tuning, interface screencaptures of every relevant detail of the frontend, and every detail considered relevant. All questions and the application itself are in Spanish, as this is a Bachelor's Thesis from a Spanish university, designed to be used by teachers of Database courses.
 
 ---
 
@@ -100,6 +104,8 @@ TFG/
 📥 **Download link:**
 [https://huggingface.co/Miguelsbdh/llama-3-finetuned-bases-de-datos/blob/main/llama-3-finetuned-bases-de-datos-unsloth.Q5_K_M.gguf](https://huggingface.co/Miguelsbdh/llama-3-finetuned-bases-de-datos/blob/main/llama-3-finetuned-bases-de-datos-unsloth.Q5_K_M.gguf)
 
+> **Note:** The model file is several GB in size. This is the only manual step required.
+
 ---
 
 ### 4. Start the Application
@@ -109,14 +115,26 @@ docker compose up --build
 ```
 
 This single command will:
-- Start the MySQL database and load the schema and initial data automatically.
+- Start the MySQL database and import the schema and initial data automatically.
 - Build and start the Node.js backend.
 - Build the Quasar SPA and serve it with NGINX.
-- Start the Llama 3 model server.
+- Start the fine-tuned Llama 3 model server.
 
 Once all services are running, open your browser at [http://localhost:9000](http://localhost:9000).
 
 > **Note:** The first build may take several minutes as Docker pulls the base images and compiles the frontend.
+
+To stop all containers:
+
+```bash
+docker compose down
+```
+
+To stop and wipe the database (full reset):
+
+```bash
+docker compose down -v
+```
 
 ---
 
