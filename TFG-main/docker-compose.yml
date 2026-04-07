@@ -1,0 +1,72 @@
+services:
+
+  # Docker 1 — MySQL database
+  db:
+    image: mysql:8.0
+    container_name: tfg-db
+    restart: unless-stopped
+    command: --lower_case_table_names=1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tfg
+      MYSQL_USER: tfg
+      MYSQL_PASSWORD: tfg
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./tfg.sql:/docker-entrypoint-initdb.d/tfg.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "tfg", "-ptfg"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Docker 4 — Llama 3 fine-tuned model (llama-cpp-python)
+  llm:
+    image: ghcr.io/abetlen/llama-cpp-python:v0.2.77
+    container_name: tfg-llm
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/models
+    environment:
+      MODEL: /models/llama-3-finetuned-bases-de-datos-unsloth.Q5_K_M.gguf
+
+  # Docker 2 — Node.js backend
+  backend:
+    build:
+      context: ./servidor
+      dockerfile: Dockerfile
+    container_name: tfg-backend
+    restart: unless-stopped
+    ports:
+      - "9001:9001"
+    environment:
+      PORT: 9001
+      DB_HOST: db
+      DB_USER: tfg
+      DB_PASSWORD: tfg
+      DB_NAME: tfg
+      LLM_URL: http://llm:8000
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Docker 3 — Quasar SPA served by NGINX
+  frontend:
+    build:
+      context: ./cliente
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:9001
+    container_name: tfg-frontend
+    restart: unless-stopped
+    ports:
+      - "9000:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
