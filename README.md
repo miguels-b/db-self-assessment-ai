@@ -4,7 +4,7 @@
 
 ## Description
 
-A web application that helps students of *Database Systems* to self-assess using a fine-tuned large language model (Llama 3). Students can practise, receive instant feedback, and track their progress in an intuitive interface. Completelly documented in Spanish in TFG.pdf with every aspect relevant to the project, execution photos, evaluation of the effect of the finetuning, interface screencaptures of every relevant detail of the frontend and every detail considered relevant to the project. All the questions and application is in Spanish as it is a Bachelor's Thesis in a Spanish University and it is thought to be used by teachers of courses of Databases
+A web application that helps students of *Database Systems* to self-assess using a fine-tuned large language model (Llama 3). It uses docker-compose to get 4 dockers into 1 to make it easy to execute locally. Students can practise, receive instant feedback, and track their progress in an intuitive interface. Completelly documented in Spanish in TFG.pdf with every aspect relevant to the project, execution photos, evaluation of the effect of the finetuning, interface screencaptures of every relevant detail of the frontend and every detail considered relevant to the project. All the questions and application is in Spanish as it is a Bachelor's Thesis in a Spanish University and it is thought to be used by teachers of courses of Databases.
 
 ---
 
