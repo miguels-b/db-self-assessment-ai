@@ -1,5 +1,3 @@
-# DB Self-Assessment Platform with AI
-
 **Bachelor's Thesis (TFG) — Miguel Sánchez-Beato**
 
 ---
@@ -13,11 +11,13 @@ A web application that helps students of *Database Systems* to self-assess using
 ## Table of Contents
 
 1. [Main Features](#main-features)
-2. [Setup & Getting Started](#setup--getting-started)
+2. [Architecture](#architecture)
+3. [Setup & Getting Started](#setup--getting-started)
    1. [Prerequisites](#1-prerequisites)
    2. [Clone the Repository](#2-clone-the-repository)
-   3. [Start the Application](#3-start-the-application)
-3. [User Manual](#user-manual)
+   3. [Download the Model](#3-download-the-model)
+   4. [Start the Application](#4-start-the-application)
+4. [User Manual](#user-manual)
 
 ---
 
@@ -43,6 +43,19 @@ A web application that helps students of *Database Systems* to self-assess using
 
 ---
 
+## Architecture
+
+The system is composed of four Docker containers:
+
+| Container | Technology | Port | Description |
+|-----------|------------|------|-------------|
+| `tfg-db` | MySQL 8.0 | 3306 | Relational database |
+| `tfg-backend` | Node.js 20 | 9001 | REST API and business logic |
+| `tfg-frontend` | Quasar SPA + NGINX | 9000 | User interface |
+| `tfg-llm` | llama-cpp-python | 8000 | Fine-tuned Llama 3 model |
+
+---
+
 ## Setup & Getting Started
 
 ### 1. Prerequisites
@@ -50,7 +63,7 @@ A web application that helps students of *Database Systems* to self-assess using
 - **Docker Desktop** (v20.10 or higher)
 - **Minimum 8 GB RAM**
 - **Intel i7 7th generation processor or equivalent**
-- **Internet connection (only to download model)**
+- **Internet connection** (first run only, to pull Docker images)
 
 ---
 
@@ -64,27 +77,46 @@ cd TFG
 **Project structure:**
 
 ```
-quasar-project/
-servidor/
+cliente/          # Quasar frontend
+servidor/         # Node.js backend
 docker-compose.yml
+nginx.conf
+tfg.sql           # Database schema + initial data
 README.md
-tfg.sql
 ```
 
 ---
 
-### 3. Start the Application
+### 3. Download the Model
 
-The entire stack (database, LLM, backend, and frontend) runs with a single command:
+Download the fine-tuned Llama 3 model from Hugging Face and place it inside a `models/` folder in the project root:
 
-```bash
-docker compose up
+```
+TFG/
+└── models/
+    └── llama-3-finetuned-bases-de-datos-unsloth.Q5_K_M.gguf
 ```
 
-> **Note:** On the first run, Docker will download the fine-tuned Llama 3 model from Hugging Face. The model file is available at:
-> [https://huggingface.co/Miguelsbdh/llama-3-finetuned-bases-de-datos/blob/main/llama-3-finetuned-bases-de-datos-unsloth.Q5_K_M.gguf](https://huggingface.co/Miguelsbdh/llama-3-finetuned-bases-de-datos/blob/main/llama-3-finetuned-bases-de-datos-unsloth.Q5_K_M.gguf)
+📥 **Download link:**
+[https://huggingface.co/Miguelsbdh/llama-3-finetuned-bases-de-datos/blob/main/llama-3-finetuned-bases-de-datos-unsloth.Q5_K_M.gguf](https://huggingface.co/Miguelsbdh/llama-3-finetuned-bases-de-datos/blob/main/llama-3-finetuned-bases-de-datos-unsloth.Q5_K_M.gguf)
 
-Once all services are running, open your browser and go to [http://localhost:9000](http://localhost:9000).
+---
+
+### 4. Start the Application
+
+```bash
+docker compose up --build
+```
+
+This single command will:
+- Start the MySQL database and load the schema and initial data automatically.
+- Build and start the Node.js backend.
+- Build the Quasar SPA and serve it with NGINX.
+- Start the Llama 3 model server.
+
+Once all services are running, open your browser at [http://localhost:9000](http://localhost:9000).
+
+> **Note:** The first build may take several minutes as Docker pulls the base images and compiles the frontend.
 
 ---
 
