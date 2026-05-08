@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 const dbConfig = {
-  host: 'localhost',
+  host: process.env.DB_HOST || 'localhost',
   user: 'tfg',
   password: 'tfg',
   database: 'tfg',
@@ -783,9 +783,30 @@ app.get('/api/objetivos/:objetivoId/stats', async (req, res) => {
 
 
 
+const waitForDB = async (retries = 10, delay = 3000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await pool.query('SELECT 1');
+      console.log('✅ Conexión a la base de datos establecida.');
+      return;
+    } catch (err) {
+      console.log(`⏳ Esperando a la base de datos... intento ${i + 1}/${retries}`);
+      await new Promise(res => setTimeout(res, delay));
+    }
+  }
+  console.error('❌ No se pudo conectar a la base de datos. Saliendo.');
+  process.exit(1);
+};
 
 // Inicia el servidor
-app.listen(port, async () => {
-  console.log(`Servidor escuchando en http://localhost:${port}`);
-  await ensureTestUserExists();
-});
+const startServer = async () => {
+  await waitForDB();
+  await ensureTasksDirExists();
+
+  app.listen(port, async () => {
+    console.log(`Servidor escuchando en http://localhost:${port}`);
+    await ensureTestUserExists();
+  });
+};
+
+startServer();
