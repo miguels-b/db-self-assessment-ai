@@ -17,11 +17,10 @@ services:
       - db_data:/var/lib/mysql
       - ./tfg.sql:/docker-entrypoint-initdb.d/tfg.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "tfg", "-ptfg"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
       interval: 10s
       timeout: 5s
       retries: 10
-
   # Docker 4 — Llama 3 fine-tuned model (llama-cpp-python)
   llm:
     image: ghcr.io/abetlen/llama-cpp-python:v0.2.77
