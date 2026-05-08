@@ -125,7 +125,7 @@ npm install
 
 ### 5. Ejecutar el modelo LLM (Llama 3) con Docker 🐳
 
-1. Descarga el modelo `llama-3-finetuned-bases-de-datos-unsloth.Q5_K_M.gguf` desde Hugging Face.
+1. Descarga el modelo `llama-3-finetuned-bases-de-datos-unsloth.Q5_K_M.gguf` desde Hugging Face en https://huggingface.co/Miguelsbdh/llama-3-finetuned-bases-de-datos/tree/main.
 2. Guarda el archivo en una carpeta, por ejemplo: `C:/llama.cpp/models`.
 3. Ejecuta el siguiente comando (ajusta la ruta en `-v` según corresponda):
 
